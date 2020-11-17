@@ -1,0 +1,107 @@
+*** Symfony 4: programme de formation ***
+
+Introduction au framework PHP Symfony
+    L’évolution du framework
+    L’écosystème des frameworks PHP
+    Identifier et trouver des ressources sur Symfony
+    Les concepts fondamentaux de Symfony
+    Symfony Flex VS Symfony Full Stack Framework
+    Les atouts de Symfony
+
+Rappel sur la Programmation Orientée Objet
+    Classes et objets : attributs, méthodes et instances
+    Constructeurs / destructeurs
+    Héritage et agrégation
+    Le concept de Namespace
+
+Les bases de Sympfony ™
+    Installation de Symfony ™
+    Mettre en place la structure d’un projet Sympfony ™
+    Les base du concept MVC (Modèles, Vues, Contrôleurs)
+    Configuration de votre framework Symfony (XML, YAML, PHP)
+    Comprendre le déroulement d’une requête HTTP dans Symfony
+
+La couche modèle en Symfony ™ avec Doctrine 2
+    Présentation du concept d’ORM (Object Relational Mapping)
+    Générer une base de données et les classes associées de la couche ORM
+    Améliorer ses requêtes avec des critères
+    Le Query Builder de Doctrine
+
+La couche Vue en Symfony ™ avec Twig
+    Présentation de la couche Vue
+    Créer vos templates
+    Le layout global et les layouts des bundles
+    Créer des templates modulaires avec les blocks
+
+La couche Contrôleur en Symfony ™
+    La gestion du routage des pages
+    Gérer des paramètres
+    Manipuler des objets Request et Response
+
+Créer des formulaires
+    Mettre en place des formulaires simples
+    Définir des règles de validation de vos formulaires
+    Les formulaires et le Templating avec Twig
+
+Les tests unitaires et fonctionnels
+    Présentation des tests unitaires
+    Présentation des tests fonctionnels
+
+Le routage avec Symfony
+    Les règles de réécritures d’URL
+
+Aller plus loin avec Symfony ™
+    Utiliser les recettes (Recipes) pour travailler avec des bundles
+    Les trucs et astuces des experts
+    Quelques commandes utiles
+    La sécurité
+
+------------------------------------------------------------------------
+
+Symfony : Rappels
+    Symfony : présentation générale
+    Introduction aux divers types d’installations
+    Visualiser l’architecture du projet
+    Connaître la structure d’un bundle
+
+Injection de dépendances sous Symfony™
+    Injecteur de dépendance : comprendre le principe
+    Trouver les services du conteneur
+    Procéder à une extension par bundle
+    Réaliser ses propres services
+
+Appréhender la pile d’événements
+    Pile d’événements : principes et enjeux
+    Procéder à une intervention sur la pile
+
+Concevoir des commandes à destination de la Console
+    Réaliser sa propre commande
+    Administrer les options
+    Gérer les arguments
+    Savoir récupérer un service de l’application
+    Interaction : questions posées en CLI
+    Procéder au formatage de l’affichage
+
+Twig : Appréhender ses extensions
+    Twig : rappels
+    Concevoir une extension Twig
+    Concevoir des fonctions
+    Concevoir des filtres
+
+Doctrine 2 : Notions avancées
+    Doctrine : rappels
+    Doctrine Query Language : DQL
+    La notion de lifecycle callbacks
+
+Se servir du cache HTTP avec Symfony™
+    HTTP : rappels sur le protocole
+    Savoir envisager son cache
+    Utiliser le cache HTTP via Symfony
+    Le proxy inverse : reverse proxy
+    ESI include :appréhender le langage de balisage
+
+Déployer la sécurité sur Symfony™
+    Sécurité sous Symfony : introduction générale
+    Se servir du pare-feu
+    Savoir récupérer un utilisateur authentifié
+    ACL : contrôler les accès
