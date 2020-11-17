@@ -1,0 +1,28 @@
+*** Exercices ***
+
+1.
+Créer un controleur "ExoController"
+
+Créer une route exos/exo1 (annotation + méthode associée)
+Cette route lira la queryString afin de récupérer un paramètre "num"
+La réponse retournée au client sera la valeur de "num" au carrée
+Exemple: si num=4, réponse => 16
+
+Créer une route exos/exo2 (annotation + méthode associée)
+Cette route renverra deux balises HTML img ayant pour source des images
+situées dans le dossier public/images
+
+2.
+Créer une route exos/exo3 (config/routes.yaml + méthode associée)
+Cette route renverra le rendu d'un fichier exos/exo3.html.twig
+Fournir au template le tableau associatif suivant:
+    $colors = [
+        ["name" => "orange", "hexa" => "#ed9a2d"],
+        ["name" => "vert", "hexa" => "#36eb4d"],
+        ["name" => "bleu", "hexa" => "#0759a6"],
+        ["name" => "violet", "hexa" => "#9169db"],
+        ["name" => "rose", "hexa" => "#e041c1"]
+    ]
+Dans le template, itérer sur le tableau des couleurs afin de générer un
+div (carré de 50 pixels de côté) ayant pour couleur de fond la couleur itérée
+et pour texte interne, le texte correspondant
