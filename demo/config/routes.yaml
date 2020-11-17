@@ -11,3 +11,7 @@ demo13:
   controller: App\Controller\TestController::demo13
   requirements:
     num: '\d+'
+
+exo3:
+  path: /exos/exo3
+  controller: App\Controller\ExoController::exo3

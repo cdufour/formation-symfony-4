@@ -1,0 +1,22 @@
+{% extends "demo.base.html.twig" %}
+
+{% block pageTitle %}demo 18{% endblock %}
+
+{% block body %}
+<h2>Demo 18 template</h2>
+{% endblock %}
+
+{% block js %}
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+<script>
+// code JS (interprété par le client)
+var a = 5;
+var b = 2;
+console.log(a * b);
+
+// test d'utilisation de jQuery
+$("h2").css("color", "orange");
+
+</script>
+{% endblock %}  

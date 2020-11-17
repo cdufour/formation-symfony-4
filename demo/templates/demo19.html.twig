@@ -1,0 +1,31 @@
+{% extends "demo.base.html.twig" %}
+
+{% block pageTitle %}demo 19{% endblock %}
+
+{% block body %}
+
+{% include header ? "includes/header.html.twig" : "includes/empty.html.twig" %}
+
+<h2>{{ title | upper }}</h2> 
+{# 
+<h2>{{ title | first }}</h2> => en sortie: d  
+https://twig.symfony.com/doc/2.x/filters/first.html
+#}
+<p>Simple paragraphe</p>
+<p>Aujourd'hui, nous sommes le: {{ "now" | date("d m Y") }}</p>
+
+{# utilisation de la fonction random() #}
+<p>J'aimerais manger une {{ random(fruits) }} </p>
+
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+// code JS (interprété par le client)
+var a = 5;
+var b = 2;
+console.log(a + b);
+</script>
+{% endblock %}  

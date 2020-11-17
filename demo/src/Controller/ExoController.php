@@ -25,4 +25,22 @@ class ExoController extends AbstractController
 
         return new Response($html);
     }
+
+    public function exo3()
+    {
+        $colors = [
+            ["name" => "orange", "hexa" => "#ed9a2d"],
+            ["name" => "vert", "hexa" => "#36eb4d"],
+            ["name" => "bleu", "hexa" => "#0759a6"],
+            ["name" => "violet", "hexa" => "#9169db"],
+            ["name" => "rose", "hexa" => "#e041c1"]
+        ];
+
+        $res = $this->render("exos/exo3.html.twig", array(
+            "colors" => $colors,
+            "title" => "Exo 3"
+        ));
+
+        return $res;
+    }
 }

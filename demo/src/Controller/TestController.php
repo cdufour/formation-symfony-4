@@ -216,7 +216,7 @@ class TestController extends AbstractController
     public function demo16()
     {
         // Utilisation du deuxième paramètre de render()
-        // afin de transmettre des données (tableau) au template
+        // afin de transmettre des données (tableau assoc) au template
         $students = array(
             array("name" => "Chris", "status" => "teacher"),
             array("name" => "Niakalé", "status" => "student"),
@@ -235,8 +235,8 @@ class TestController extends AbstractController
     */
     public function demo17()
     {
-        // Utilisation du deuxième paramètre de render()
-        // afin de transmettre des données (tableau) au template
+        // Idem que demo16, la variable $students est ici un
+        // tableau d'objets. La template twig fonctionne de manière identique
         $s1 = new Student("Chris", "teacher");
         $s2 = new Student("Niakalé", "student");
         $s3 = new Student("Karine", "student");
@@ -246,6 +246,28 @@ class TestController extends AbstractController
             "students" => $students,
             "title" => "Demo 16 - TWIG"
         ));
+        return $res;
+    }
+
+    /**
+    * @Route("/demo18")
+    */
+    public function demo18()
+    {
+        $res = $this->render("demo18.html.twig");
+        return $res;
+    }
+
+    /**
+    * @Route("/demo19")
+    */
+    public function demo19()
+    {
+        $res = $this->render("demo19.html.twig", [
+            "header" => true,
+            "title" => "demo 19 template",
+            "fruits" => ["orange", "pomme", "poire"]
+        ]);
         return $res;
     }
 
