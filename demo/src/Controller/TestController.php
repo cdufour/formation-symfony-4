@@ -10,7 +10,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Utils\Student;
+
+// Aliasing de la classe App\Utils\Student
+// afin d'éviter un conflit de noms
+use App\Utils\Student as StudentUtil;
+use App\Entity\Student;
+use App\Entity\Training;
+use App\Entity\Country;
+
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 
 class TestController extends AbstractController
@@ -237,9 +246,9 @@ class TestController extends AbstractController
     {
         // Idem que demo16, la variable $students est ici un
         // tableau d'objets. La template twig fonctionne de manière identique
-        $s1 = new Student("Chris", "teacher");
-        $s2 = new Student("Niakalé", "student");
-        $s3 = new Student("Karine", "student");
+        $s1 = new StudentUtil("Chris", "teacher");
+        $s2 = new StudentUtil("Niakalé", "student");
+        $s3 = new StudentUtil("Karine", "student");
         $students = array($s1, $s2, $s3);
 
         $res = $this->render("demo16.html.twig", array(
@@ -269,6 +278,173 @@ class TestController extends AbstractController
             "fruits" => ["orange", "pomme", "poire"]
         ]);
         return $res;
+    }
+
+    /**
+    * @Route("/demo20")
+    */
+    public function demo20()
+    {
+        // Relation entre la couche C et la couche M du modèle MVC
+
+        // instanciation de la classe App\Entity\Student
+        $student = new Student();
+        $student->setName("Chris");
+        $student->setStatus("teacher");
+
+        // entity manager de doctrine
+        $em = $this->getDoctrine()->getManager();
+
+        // mise en attente de la requête
+        $em->persist($student);
+
+        $em->flush(); // exécution de la requête SQL
+
+        return new Response($student->getId());
+    }
+
+    /**
+    * @Route("/demo21")
+    */
+    public function demo21(Request $request)
+    {
+        // Relations entre les couches C, M et V
+
+        $name = "";
+        $status = "";
+        $method = $request->getMethod();
+
+        $repo = $this->getDoctrine()->getRepository(Country::class);
+        $countries = $repo->findAll();
+
+        if ($method == "POST") {
+            // récupération des données postées via le formulaire
+            $name           =   $request->request->get("name");
+            $status         =   $request->request->get("status");
+            $countryId      =   intval($request->request->get("country"));
+
+            // ToDO: validation des inputs
+
+            $student = new Student($name, $status);
+
+            // Lien entre l'étudiant et le pays choisi dans le formulaire
+            $country = $repo->find($countryId); // retourne une instance Country
+            $student->setCountry($country);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($student);
+            $em->flush();
+
+            // Retour de fonction possible ici
+            // return new Response(
+            //     "Nouvel étudiant enregistré: " . $student->getId());
+        }
+
+        $res = $this->render("demo21.html.twig", [
+            "method" => $method,
+            "postData" => [$name, $status],
+            "countries" => $countries
+        ]);
+
+        // Paramètrage du statusCode dans le cas d'un ajout d'étudiant
+        if ($method == "POST") $res->setStatusCode(201); // 201: création de ressource
+
+        return $res;
+    }
+
+    /**
+    * @Route("/demo22", name="student_list")
+    */
+    public function demo22(Request $request)
+    {
+        // Récupération des étudiants enregistrés en DB
+
+        // Instanciation du Repository
+        $repo = $this->getDoctrine()->getRepository(Student::class);
+        $students = $repo->findAll();
+
+        // Tranmission des données au template
+        $res = $this->render("demo22.html.twig", [
+            "students" => $students
+        ]);
+        return $res;
+    }
+
+    /**
+    * @Route("/demo23/{id}/delete")
+    */
+    public function demo23($id)
+    {
+        // Suppresion d'un étudiant en DB
+
+        $repo = $this->getDoctrine()->getRepository(Student::class);
+        $student = $repo->find($id); // objet étudiant à supprimer
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($student);
+        $em->flush();
+
+        // redirection
+        return $this->redirectToRoute("student_list");
+    }
+
+    /**
+    * @Route("/demo24/{id}/delete", methods={"DELETE"})
+    */
+    public function demo24($id)
+    {
+        // Suppresion d'un étudiant en DB
+
+        $repo = $this->getDoctrine()->getRepository(Student::class);
+        $student = $repo->find($id); // objet étudiant à supprimer
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($student);
+        $em->flush();
+
+        return new Response("ok");
+    }
+
+    /**
+    * @Route("/demo25")
+    */
+    public function demo25(Request $request)
+    {
+        // Construction d'un formulaire
+
+        $training = new Training();
+        $training->setTitle("");
+        $training->setLevel(1);
+        $training->setDuration(3);
+
+        $form = $this->createFormBuilder($training)
+            ->add("title", TextType::class, ["label" => "Intitulé"])
+            ->add("level", TextType::class, ["label" => "Niveau"])
+            ->add("duration", TextType::class, ["label" => "Nombre de jours"])
+            ->add("save", SubmitType::class, ["label" => "Enregistrer"])
+            ->getForm();
+
+        // connexion entre le formulaire et la requête
+        $form->handleRequest($request);
+
+        // détection de la soumission du formulaire
+        // équivalent à $request->getMethod() == "POST"
+        if ($form->isSubmitted()) {
+            $training = $form->getData();
+
+            // insertion en DB
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($training);
+            $em->flush();
+        }
+
+
+        $res = $this->render("demo25.html.twig", [
+            "form" => $form->createView()
+        ]);
+
+        return $res;
+
     }
 
 }

@@ -15,3 +15,7 @@ demo13:
 exo3:
   path: /exos/exo3
   controller: App\Controller\ExoController::exo3
+
+exo4:
+  path: /exos/exo4
+  controller: App\Controller\ExoController::exo4

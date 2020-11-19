@@ -1,0 +1,59 @@
+{% extends "demo.base.html.twig" %}
+
+{% block pageTitle %}demo 22{% endblock %}
+
+{% block body %}
+    <h3>Liste des étudiants</h3>
+    <ul id="list">
+        {% for student in students %}
+            <li data-id="{{student.id}}">
+                <span>{{ student.name }}</span> | 
+                <a href="/demo23/{{student.id}}/delete">supprimer</a>
+                <button data-id="{{student.id}}" class="btnDelete">supprimer (ajax)</button>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block js %}
+<script>
+
+(function() {
+    
+    var buttons = document.getElementsByClassName("btnDelete");
+    var items = document.getElementById("list").children;
+
+    // attribution d'un écouteur click sur chaque bouton
+    for (var i=0; i<buttons.length; i++) {
+        buttons[i].addEventListener("click", function(e) {
+            var studentId = e.target.getAttribute("data-id");
+            removeStudent(studentId);
+        })
+    }
+
+    function removeStudent(id) {
+        console.log("Remove student " + id);
+        var url = "/demo24/" + id + "/delete";
+
+        // requête ajax
+        fetch(url, { method: "DELETE" }).then(function(res) {
+            console.log("Suppression OK");
+            removeItem(id);
+        })
+    }
+
+    function removeItem(id) {
+        for (var i=0; i<items.length; i++) {
+            if (items[i].getAttribute("data-id") == id) {
+                items[i].remove(); // suppression du li côté front
+                break;
+            }
+        }
+    }
+
+
+})()
+
+</script>
+{% endblock %}
+

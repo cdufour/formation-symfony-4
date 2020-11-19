@@ -27,6 +27,23 @@ class Student
      */
     private $status;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $email;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Country::class)
+     */
+    private $country;
+
+    // Ajout d'un constucteur
+    public function __construct($name, $status)
+    {
+        $this->setName($name);
+        $this->setStatus($status);
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +69,30 @@ class Student
     public function setStatus(string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getCountry(): ?Country
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?Country $country): self
+    {
+        $this->country = $country;
 
         return $this;
     }

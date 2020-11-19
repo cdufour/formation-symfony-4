@@ -7,6 +7,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Country;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ExoController extends AbstractController
 {
@@ -42,5 +45,33 @@ class ExoController extends AbstractController
         ));
 
         return $res;
+    }
+
+    public function exo4(Request $req)
+    {
+        $country = new Country();
+
+        $form = $this->createFormBuilder($country)
+            ->add("name", TextType::class, ["label" => "Nom"])
+            ->add("save", SubmitType::class, ["label" => "Enregistrer"])
+            ->getForm();
+
+        $form->handleRequest($req);
+
+        if ($form->isSubmitted()) {
+            $country = $form->getData();
+
+            // insertion en DB
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($country);
+            $em->flush();
+        }
+
+        $res = $this->render("exos/exo4.html.twig", [
+            "form" => $form->createView()
+        ]);
+
+        return $res;
+
     }
 }
