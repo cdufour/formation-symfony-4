@@ -26,11 +26,8 @@ class StudentRepository extends ServiceEntityRepository
     public function findByExampleField($value)
     {
         return $this->createQueryBuilder('s')
-            //->join('s.country', 'c', 'country_id')
-            //->where('c.name = :country_name')
-            //->setParameter('country_name', "Belgique")
-            //->andWhere('s.status = :val')
-            //->setParameter('val', $value)
+            ->where('s.status = :val')
+            ->setParameter('val', $value)
             ->orderBy('s.name', 'ASC')
             ->setMaxResults(5) // limit
             ->setFirstResult(1) // offset
@@ -38,16 +35,62 @@ class StudentRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    
-    /*
-    public function findOneBySomeField($value): ?Student
+
+    /**
+    * @return Student[] Returns an array of Student objects
+    */
+    public function findByCountry($countryName)
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
+            ->join('s.country', 'c', 'country_id')
+            ->where('c.name = :countryName')
+            ->setParameter('countryName', $countryName)
+            ->orderBy('s.name', 'ASC')
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
+
+    /**
+    * @return Student[] Returns an array of Student objects
+    * Syntaxe DQL
     */
+    public function findTeachers()
+    {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery(
+            'SELECT s FROM App\Entity\Student s
+                WHERE s.status = :status
+                ORDER BY s.name ASC
+            '
+        );
+
+        $query->setParameter("status", "teacher");
+
+        return $query->getResult();
+    }
+
+        /**
+    * @return Student[] Returns an array of Student objects
+    * Syntaxe DQL
+    * https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/dql-doctrine-query-language.html
+    */
+    public function findByTraining($trainingTitle)
+    {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery(
+            'SELECT s FROM App\Entity\Student s
+                LEFT JOIN s.training t
+                WHERE t.title = :trainingTitle
+                ORDER BY s.name ASC
+            '
+        );
+
+        $query->setParameter("trainingTitle", $trainingTitle);
+
+        return $query->getResult();
+    }
+    
 }

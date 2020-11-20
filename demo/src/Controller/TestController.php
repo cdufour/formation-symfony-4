@@ -17,14 +17,15 @@ use App\Utils\Student as StudentUtil;
 use App\Entity\Student;
 use App\Entity\Training;
 use App\Entity\Country;
-
+use App\Event\TestEvent;
+use App\Event\TestEventSubscriber;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Form\StudentType;
 
 use App\Service\CalculatorService;
 use App\Service\StudentManagerService;
-
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class TestController extends AbstractController
 {
@@ -563,14 +564,19 @@ class TestController extends AbstractController
         /*
         $students = $repo->findBy(
             ["status" => "élève"], // criteria
+            //["country" => "Belgique"], // Pas possible avec ->findBy()
             ["name" => "ASC"], // orderby
             5, // limit
             1 // offset
         );
         */
+        
 
         // https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/query-builder.html
-        $students = $repo->findByExampleField("éléve");
+        //$students = $repo->findByExampleField("éléve");
+        //$students = $repo->findByCountry("Belgique");
+        //$students = $repo->findTeachers();
+        $students = $repo->findByTraining("Symfony 4");
         
         $res = $this->render("demo31.html.twig", [
             "students" => $students
@@ -578,5 +584,44 @@ class TestController extends AbstractController
         
         return $res;
     }
+
+    /**
+    * @Route("/demo32")
+    */
+    public function demo32(EventDispatcherInterface $dispatcher)
+    {
+        $e = new TestEvent("Success");
+        $dispatcher->dispatch($e, TestEvent::NAME);
+        return $this->render("demo32.html.twig");
+    }
+
+    /**
+    * @Route("/demo33")
+    */
+    public function demo33()
+    {
+        $repo = $this->getDoctrine()->getRepository(Student::class);
+        $students = $repo->findAll();
+
+        $res = $this->render("demo33.html.twig", [
+            "students" => $students
+        ]);
+
+        $res->setPublic(); // rend accessible aux proxy le dossier var/cache
+        $res->setMaxAge(60 * 10); // 10 minutes en cache
+
+        return $res;
+    }
+
+     /**
+    * @Route("/demo34")
+    * ESI: https://symfony.com/doc/4.4/http_cache/esi.html
+    */
+    public function demo34()
+    {
+        $res = $this->render("demo34.html.twig");
+        return $res;
+    }
+    
 
 }

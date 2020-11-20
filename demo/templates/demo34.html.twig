@@ -1,0 +1,17 @@
+{% extends "demo.base.html.twig" %}
+
+{% block pageTitle %}demo 34{% endblock %}
+
+{% block body %}
+
+    <h3>Rendu du retour d'un controlleur</h3>
+
+    {{ render(controller('App\\Controller\\TestController::demo3')) }}
+
+    {# 
+    Dans le cas d'une mise en cache, render_esi sera un fragment dynamoque non cached
+    render_esi(controller('App\\Controller\\TestController::demo3')) 
+    #}
+
+
+{% endblock %}
