@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\StudentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -37,11 +39,20 @@ class Student
      */
     private $country;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Training::class, inversedBy="students")
+     */
+    private $training;
+
     // Ajout d'un constucteur
-    public function __construct($name, $status)
+    public function __construct(?string $name="", ?string $status="")
     {
-        $this->setName($name);
-        $this->setStatus($status);
+        if ($name && $status) {
+            $this->setName($name);
+            $this->setStatus($status);
+        }
+
+        $this->training = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -93,6 +104,30 @@ class Student
     public function setCountry(?Country $country): self
     {
         $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Training[]
+     */
+    public function getTraining(): Collection
+    {
+        return $this->training;
+    }
+
+    public function addTraining(Training $training): self
+    {
+        if (!$this->training->contains($training)) {
+            $this->training[] = $training;
+        }
+
+        return $this;
+    }
+
+    public function removeTraining(Training $training): self
+    {
+        $this->training->removeElement($training);
 
         return $this;
     }

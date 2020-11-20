@@ -8,11 +8,14 @@ Cette route lira la queryString afin de récupérer un paramètre "num"
 La réponse retournée au client sera la valeur de "num" au carrée
 Exemple: si num=4, réponse => 16
 
+
+2.
 Créer une route exos/exo2 (annotation + méthode associée)
 Cette route renverra deux balises HTML img ayant pour source des images
 situées dans le dossier public/images
 
-2.
+
+3.
 Créer une route exos/exo3 (config/routes.yaml + méthode associée)
 Cette route renverra le rendu d'un fichier exos/exo3.html.twig
 Fournir au template le tableau associatif suivant:
@@ -26,3 +29,19 @@ Fournir au template le tableau associatif suivant:
 Dans le template, itérer sur le tableau des couleurs afin de générer un
 div (carré de 50 pixels de côté) ayant pour couleur de fond la couleur itérée
 et pour texte interne, le texte correspondant
+
+
+4.
+Créer une entité Country
+Cette entité aura un seul champ: name (string, 255)
+Mettre à jour la base de données
+Créer la route exos/exo4 renvoyant un formulaire permettant
+d'enregistrer un pays en base de données
+
+
+5.
+Ajouter une méthode tva($prix_ht) au service CalculatorService
+Cette méthode renverra le prix_ht augmenté de la tva. La taux tva
+par défaut sera fourni en paramètre de le classe CalculatorService 
+via le fichier services.yaml
+Prévoir un test unitaire sur cette nouvelle fonctionnalité

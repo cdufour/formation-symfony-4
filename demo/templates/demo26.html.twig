@@ -1,0 +1,25 @@
+{% extends "demo.base.html.twig" %}
+
+{% block pageTitle %}demo 26{% endblock %}
+
+{% block body %}
+    <h3>Fiche étudiant</h3>
+
+    <p>Nom: {{ student.name | upper }}</p>
+    <p>Statut: {{ student.status | title }}</p>
+    <p>Pays: {{ student.country.name }}</p>
+
+
+    {% if student.training | length == 0  %}
+        <p>Aucun formation suivie</p>
+    {% else %}
+        <p>Formations suivies: </p>
+        <ul>
+        {% for training in student.training %}
+            <li>{{ training.title }} - Niveau {{ training.level }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+
+{% endblock %}

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Student;
+use App\Entity\Country;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,23 +20,25 @@ class StudentRepository extends ServiceEntityRepository
         parent::__construct($registry, Student::class);
     }
 
-    // /**
-    //  * @return Student[] Returns an array of Student objects
-    //  */
-    /*
+    /**
+    * @return Student[] Returns an array of Student objects
+    */
     public function findByExampleField($value)
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
+            //->join('s.country', 'c', 'country_id')
+            //->where('c.name = :country_name')
+            //->setParameter('country_name', "Belgique")
+            //->andWhere('s.status = :val')
+            //->setParameter('val', $value)
+            ->orderBy('s.name', 'ASC')
+            ->setMaxResults(5) // limit
+            ->setFirstResult(1) // offset
             ->getQuery()
             ->getResult()
         ;
     }
-    */
-
+    
     /*
     public function findOneBySomeField($value): ?Student
     {

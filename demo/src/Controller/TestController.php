@@ -20,10 +20,25 @@ use App\Entity\Country;
 
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use App\Form\StudentType;
+
+use App\Service\CalculatorService;
+use App\Service\StudentManagerService;
 
 
 class TestController extends AbstractController
 {
+    private $calculator;
+
+    public function __construct(CalculatorService $calculator)
+    {
+        // Injection de dépendances (DI)
+        //$this->calculator = new CalculatorService();
+
+        // ou, variante syntaxique en apssant par un paramètre de la méthode;
+        $this->calculator = $calculator;
+    }
+
     /**
      * @Route("/test", name="test")
      */
@@ -314,8 +329,12 @@ class TestController extends AbstractController
         $status = "";
         $method = $request->getMethod();
 
+        // Repo d'interrogation des pays
         $repo = $this->getDoctrine()->getRepository(Country::class);
         $countries = $repo->findAll();
+
+        // Repo d'interrogation des formations
+        $repoTraining = $this->getDoctrine()->getRepository(Training::class);
 
         if ($method == "POST") {
             // récupération des données postées via le formulaire
@@ -330,6 +349,13 @@ class TestController extends AbstractController
             // Lien entre l'étudiant et le pays choisi dans le formulaire
             $country = $repo->find($countryId); // retourne une instance Country
             $student->setCountry($country);
+
+            // Lien avec les formations suivies
+            $trainingIds = [1,2];
+            $training1 = $repoTraining->find(1);
+            $training2 = $repoTraining->find(2);
+            $student->addTraining($training1);
+            $student->addTraining($training2);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($student);
@@ -436,6 +462,8 @@ class TestController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($training);
             $em->flush();
+
+            return $this->redirectToRoute("student_list");
         }
 
 
@@ -444,7 +472,111 @@ class TestController extends AbstractController
         ]);
 
         return $res;
+    }
 
+    /**
+    * @Route("/demo26/student/{id}", methods={"GET"})
+    */
+    public function demo26($id)
+    {
+        // Affiche une page de détails pour l'étudiant identifié
+
+        $repoStudent = $this->getDoctrine()->getRepository(Student::class);
+        $student = $repoStudent->find(intval($id));
+
+        $res = $this->render("demo26.html.twig", [
+            "student" => $student
+        ]);
+
+        return $res;
+    }
+
+    /**
+    * @Route("/demo27")
+    */
+    public function demo27(Request $req)
+    {
+        // Utilisation d'une classe de formulaire
+        $student = new Student();
+        $form = $this->createForm(StudentType::class, $student);
+
+        $form->handleRequest($req);
+
+        if ($form->isSubmitted()) {
+            $student = $form->getData();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($student);
+            $em->flush();
+        }
+  
+        $res = $this->render("demo27.html.twig", [
+            "form" => $form->createView()
+        ]);
+
+        return $res;
+    }
+
+    /**
+    * @Route("/demo28/calc/{num}")
+    */
+    public function demo28($num)
+    {
+        $result = [
+            "num" => $num,
+            "square" => $this->calculator->square($num),
+            "cube" => $this->calculator->cube($num)
+        ];
+
+        // la méthode est un raccourci pour new JsonResponse()
+        return $this->json($result);
+    }
+
+    /**
+    * @Route("/demo29")
+    */
+    public function demo29(StudentManagerService $studentManager)
+    {
+        // Utilisation d'un service instanciant lui-même un autre service (EntityManager)
+        $student = new Student("Zoé", "élève");
+        $studentManager->insert($student);
+        return $this->redirectToRoute("student_list");
+    }
+
+     /**
+    * @Route("/demo30")
+    */
+    public function demo30()
+    {
+        // Accès à un paramètre du fichier services.yaml
+        $default_student = $this->getParameter("default_student");
+        return new Response($default_student);
+    }
+
+    /**
+    * @Route("/demo31")
+    */
+    public function demo31()
+    {
+        // 
+        $repo = $this->getDoctrine()->getRepository(Student::class);
+        
+        /*
+        $students = $repo->findBy(
+            ["status" => "élève"], // criteria
+            ["name" => "ASC"], // orderby
+            5, // limit
+            1 // offset
+        );
+        */
+
+        // https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/query-builder.html
+        $students = $repo->findByExampleField("éléve");
+        
+        $res = $this->render("demo31.html.twig", [
+            "students" => $students
+        ]);
+        
+        return $res;
     }
 
 }
